@@ -1,8 +1,6 @@
 #ifndef MCTREESEARCH_H_
 #define MCTREESEARCH_H_
 
-#include <utility>
-
 #include "global.h"
 #include "tree_node.h"
 

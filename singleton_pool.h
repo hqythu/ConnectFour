@@ -1,7 +1,7 @@
 #ifndef SINGLETON_POOL_H_
 #define SINGLETON_POOL_H_
 
-#include "MemoryPool.h"
+#include "memory_pool.h"
 
 template <typename T>
 class SingletonPool

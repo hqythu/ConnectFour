@@ -5,6 +5,9 @@
 #include <memory>
 #include <utility>
 
+#include "memory_pool.h"
+#include "singleton_pool.h"
+
 class TreeNode;
 class MCTreeSearch;
 class State;
@@ -24,6 +27,9 @@ public:
     static const int OPPONENT;
 
     static std::default_random_engine generator;
+
+    //static MemoryPool<State> state_pool;
+    //static MemoryPool<TreeNode> node_pool;
 };
 
 
