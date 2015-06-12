@@ -17,6 +17,7 @@ private:
     int n_value;
     int candidate;
     int x, y;
+    bool is_terminal;
 
 public:
     TreeNode();
@@ -27,6 +28,7 @@ public:
     int get_value() { return n_value; }
     int get_visited() { return n_visited; }
     point get_move() { return std::make_pair(x, y); }
+    bool get_terminal() { return is_terminal; }
 
     bool is_leaf();
     void update(int value);

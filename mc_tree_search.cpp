@@ -44,12 +44,19 @@ point MCTreeSearch::solve(const State& state)
             s->move(move.first, move.second, candidate);
             candidate = candidate % 2 + 1;
         }
-        t->expand(rule, s);
-        node_ptr new_node = t->select();
-        visited.push_back(new_node);
-        auto move = new_node->get_move();
-        s->move(move.first, move.second, candidate);
-        int value = new_node->monte_carlo(rule, s);
+        int value;
+        node_ptr new_node;
+        if (t->get_terminal()) {
+            value = 1;
+        }
+        else {
+            t->expand(rule, s);
+            new_node = t->select();
+            visited.push_back(new_node);
+            auto move = new_node->get_move();
+            s->move(move.first, move.second, candidate);
+            value = new_node->monte_carlo(rule, s);
+        }
         for (const auto& node : visited) {
             node->update(value);
         }

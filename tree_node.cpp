@@ -4,6 +4,9 @@
 #include <random>
 #include <limits>
 
+#include <conio.h>
+#include <atlstr.h>
+
 MemoryPool<TreeNode> node_pool;
 
 
@@ -19,6 +22,7 @@ TreeNode::TreeNode(int x, int y, int candidate)
     this->candidate = candidate;
     n_value = 0;
     n_visited = 0;
+    is_terminal = false;
 }
 
 
@@ -52,7 +56,8 @@ void TreeNode::update(int value)
 node_ptr TreeNode::select()
 {
     node_ptr selected;
-    double max = std::numeric_limits<double>::min();
+    //double max = std::numeric_limits<double>::min();
+    double max = -1;
     std::uniform_real_distribution<double> uniform(0, 1);
 
     auto calc = [this, &uniform](const node_ptr& child) {
@@ -85,7 +90,8 @@ node_ptr TreeNode::select()
 node_ptr TreeNode::choose_best()
 {
     node_ptr selected;
-    double max = std::numeric_limits<double>::min();
+    //double max = std::numeric_limits<double>::min();
+    double max = -1;
     std::uniform_real_distribution<double> uniform(0, 1);
 
     auto calc = [this, &uniform](const node_ptr& child) {
@@ -106,9 +112,22 @@ node_ptr TreeNode::choose_best()
 
 void TreeNode::expand(const rule_ptr& rule, const state_ptr& state)
 {
+    state_ptr new_state = State::create_state(*state);
     auto move_list = rule->get_all_move(state);
     for (const auto& move : move_list) {
-        auto new_node = create_node(move.first, move.second, candidate % 2 + 1);
+        int x = move.first, y = move.second;
+        auto new_node = create_node(x, y, candidate % 2 + 1);
+        new_state->move(x, y, candidate);
+        if (candidate == Global::ME) {
+            if (new_state->is_me_win(x, y)) {
+                new_node->is_terminal = true;
+            }
+        }
+        else {
+            if (new_state->is_opponent_win(x, y)) {
+                new_node->is_terminal = true;
+            }
+        }
         children.push_back(new_node);
     }
 }
