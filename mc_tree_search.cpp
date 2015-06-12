@@ -56,6 +56,5 @@ point MCTreeSearch::solve(const State& state)
     }
     node_ptr selected = root->choose_best();
     auto move = selected->get_move();
-    _cprintf("%d %d\n", selected->get_value(), selected->get_visited());
     return make_pair(move.first, move.second);
 }
