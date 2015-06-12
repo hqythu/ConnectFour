@@ -29,10 +29,10 @@ TreeNode::~TreeNode()
 
 node_ptr TreeNode::create_node(int x, int y, int candidate)
 {
-    /*return node_ptr(node_pool.newElement(x, y, candidate), [](TreeNode* p) {
+    return node_ptr(node_pool.newElement(x, y, candidate), [](TreeNode* p) {
         node_pool.deleteElement(p);
-        });*/
-    return node_ptr(new TreeNode(x, y, candidate));
+    });
+    //return node_ptr(new TreeNode(x, y, candidate));
 }
 
 
