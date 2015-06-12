@@ -15,6 +15,8 @@ TreeNode::TreeNode(int x, int y, int candidate)
     this->x = x;
     this->y = y;
     this->candidate = candidate;
+    n_value = 0;
+    n_visited = 0;
 }
 
 
@@ -49,17 +51,19 @@ node_ptr TreeNode::select()
     std::uniform_real_distribution<double> uniform(0, 1);
 
     auto calc = [this, &uniform](const node_ptr& child) {
-        double epsilon = 1e-6;
+        double epsilon = 1e-3;
+        double result;
         if (this->candidate == Global::ME) {
-            return static_cast<double>(child->n_value) / (child->n_visited + epsilon)
+            result = static_cast<double>(child->n_value) / (child->n_visited + epsilon)
                 + sqrt(log(this->n_visited + 1) / (child->n_visited + epsilon))
                 + uniform(Global::generator) * epsilon;
         }
         else {
-            return static_cast<double>(child->n_visited - child->n_value) / (child->n_visited + epsilon)
+            result = static_cast<double>(child->n_visited - child->n_value) / (child->n_visited + epsilon)
                 + sqrt(log(this->n_visited + 1) / (child->n_visited + epsilon))
                 + uniform(Global::generator) * epsilon;
         }
+        return result;
     };
 
     for (const auto& child : children) {

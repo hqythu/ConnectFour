@@ -65,7 +65,7 @@ extern "C" __declspec(dllexport) Point* getPoint(const int M, const int N, const
 		}
 	}*/
 
-    AllocConsole();
+    //AllocConsole();
 
     rule_ptr rule = rule_ptr(new Rule(noX, noY));
     MCTreeSearch treesearch(M, N, rule);
