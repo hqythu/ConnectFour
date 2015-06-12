@@ -1,6 +1,17 @@
 #include <iostream>
+#include <utility>
+#include <memory>
+
+#include <conio.h>
+#include <atlstr.h>
+
 #include "Point.h"
 #include "Strategy.h"
+
+#include "global.h"
+#include "rule.h"
+#include "state.h"
+#include "mc_tree_search.h"
 
 using namespace std;
 
@@ -46,13 +57,22 @@ extern "C" __declspec(dllexport) Point* getPoint(const int M, const int N, const
 	//Add your own code below
 	
      //a naive example
-	for (int i = N-1; i >= 0; i--) {
+	/*for (int i = N-1; i >= 0; i--) {
 		if (top[i] > 0) {
 			x = top[i] - 1;
 			y = i;
 			break;
 		}
-	}
+	}*/
+
+    AllocConsole();
+
+    rule_ptr rule = rule_ptr(new Rule(noX, noY));
+    MCTreeSearch treesearch(M, N, rule);
+    State state(M, N, board, top);
+    auto result = treesearch.solve(state);
+    x = result.first;
+    y = result.second;
 	
 	/*
 		不要更改这段代码
