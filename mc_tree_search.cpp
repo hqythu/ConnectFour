@@ -36,6 +36,7 @@ point MCTreeSearch::solve(const State& state)
         node_ptr t = root;
         state_ptr s = State::create_state(state);
         int candidate = Global::ME;
+        visited.push_back(root);
         while (!t->is_leaf()) {
             t = t->select();
             visited.push_back(t);
@@ -55,5 +56,6 @@ point MCTreeSearch::solve(const State& state)
     }
     node_ptr selected = root->choose_best();
     auto move = selected->get_move();
+    _cprintf("%d %d\n", selected->get_value(), selected->get_visited());
     return make_pair(move.first, move.second);
 }

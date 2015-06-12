@@ -1,5 +1,7 @@
 #include "state.h"
 
+MemoryPool<State> state_pool;
+
 
 State::State(int M, int N, int** board_, const int* top_)
     : M(M), N(N)

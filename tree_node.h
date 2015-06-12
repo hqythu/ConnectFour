@@ -12,16 +12,15 @@
 class TreeNode
 {
 private:
-    std::list<std::shared_ptr<TreeNode>> children;
+    std::list<node_ptr> children;
     int n_visited;
     int n_value;
     int candidate;
     int x, y;
 
+public:
     TreeNode();
     TreeNode(int x, int y, int candidate);
-
-public:
     ~TreeNode();
     static node_ptr create_node(int x, int y, int candidate);
 

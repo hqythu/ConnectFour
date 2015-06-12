@@ -23,8 +23,8 @@
 #ifndef MEMORY_POOL_H
 #define MEMORY_POOL_H
 
-#include <limits.h>
-#include <stddef.h>
+#include <climits>
+#include <cstddef>
 
 template <typename T, size_t BlockSize = 4096>
 class MemoryPool
@@ -38,6 +38,9 @@ public:
     typedef const T&        const_reference;
     typedef size_t          size_type;
     typedef ptrdiff_t       difference_type;
+    typedef std::false_type propagate_on_container_copy_assignment;
+    typedef std::true_type  propagate_on_container_move_assignment;
+    typedef std::true_type  propagate_on_container_swap;
 
     template <typename U> struct rebind {
         typedef MemoryPool<U> other;
@@ -46,9 +49,13 @@ public:
     /* Member functions */
     MemoryPool() throw();
     MemoryPool(const MemoryPool& memoryPool) throw();
+    MemoryPool(MemoryPool&& memoryPool) throw();
     template <class U> MemoryPool(const MemoryPool<U>& memoryPool) throw();
 
     ~MemoryPool() throw();
+
+    MemoryPool& operator=(const MemoryPool& memoryPool) = delete;
+    MemoryPool& operator=(MemoryPool&& memoryPool) throw();
 
     pointer address(reference x) const throw();
     const_pointer address(const_reference x) const throw();
@@ -59,15 +66,17 @@ public:
 
     size_type max_size() const throw();
 
-    void construct(pointer p, const_reference val);
-    void destroy(pointer p);
+    template <class U, class... Args> void construct(U* p, Args&&... args);
+    template <class U> void destroy(U* p);
 
-    pointer newElement(const_reference val);
+    template <class... Args> pointer newElement(Args&&... args);
     void deleteElement(pointer p);
 
 private:
     union Slot_ {
-        value_type element;
+        struct {
+            value_type element;
+        };
         Slot_* next;
     };
 
@@ -82,9 +91,8 @@ private:
 
     size_type padPointer(data_pointer_ p, size_type align) const throw();
     void allocateBlock();
-    /*
+
     static_assert(BlockSize >= 2 * sizeof(slot_type_), "BlockSize too small.");
-    */
 };
 
 #include "memory_pool.hpp"

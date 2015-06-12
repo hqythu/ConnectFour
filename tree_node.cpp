@@ -4,6 +4,8 @@
 #include <random>
 #include <limits>
 
+MemoryPool<TreeNode> node_pool;
+
 
 TreeNode::TreeNode()
 {
@@ -29,7 +31,7 @@ node_ptr TreeNode::create_node(int x, int y, int candidate)
 {
     /*return node_ptr(node_pool.newElement(x, y, candidate), [](TreeNode* p) {
         node_pool.deleteElement(p);
-    });*/
+        });*/
     return node_ptr(new TreeNode(x, y, candidate));
 }
 
@@ -87,7 +89,8 @@ node_ptr TreeNode::choose_best()
     std::uniform_real_distribution<double> uniform(0, 1);
 
     auto calc = [this, &uniform](const node_ptr& child) {
-        return static_cast<double>(child->n_value) / child->n_visited;
+        double epsilon = 1e-3;
+        return static_cast<double>(child->n_value) / (child->n_visited + epsilon);
     };
 
     for (const auto& child : children) {

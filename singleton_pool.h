@@ -22,16 +22,16 @@ public:
       typedef SingletonPool<U> other;
     };
 
-    SingletonPool() noexcept {}
+    SingletonPool() throw() {}
 
-    ~SingletonPool() noexcept {}
+    ~SingletonPool() throw() {}
 
-    pointer address(reference x) const noexcept
+    pointer address(reference x) const throw()
     {
         return pool.address(x);
     }
 
-    const_pointer address(const_reference x) const noexcept
+    const_pointer address(const_reference x) const throw()
     {
         return pool.address(x);
     }
@@ -47,7 +47,7 @@ public:
         pool.deallocate(p, n);
     }
 
-    size_type max_size() const noexcept
+    size_type max_size() const throw()
     {
         return pool.max_size();
     }

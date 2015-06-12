@@ -30,7 +30,7 @@ inline typename MemoryPool<T, BlockSize>::size_type
 MemoryPool<T, BlockSize>::padPointer(data_pointer_ p, size_type align)
 const throw()
 {
-    size_t result = reinterpret_cast<size_t>(p);
+    uintptr_t result = reinterpret_cast<uintptr_t>(p);
     return ((align - result) % align);
 }
 
@@ -40,29 +40,56 @@ template <typename T, size_t BlockSize>
 MemoryPool<T, BlockSize>::MemoryPool()
 throw()
 {
-    currentBlock_ = 0;
-    currentSlot_ = 0;
-    lastSlot_ = 0;
-    freeSlots_ = 0;
+    currentBlock_ = nullptr;
+    currentSlot_ = nullptr;
+    lastSlot_ = nullptr;
+    freeSlots_ = nullptr;
 }
 
 
 
 template <typename T, size_t BlockSize>
 MemoryPool<T, BlockSize>::MemoryPool(const MemoryPool& memoryPool)
+throw() :
+MemoryPool()
+{}
+
+
+
+template <typename T, size_t BlockSize>
+MemoryPool<T, BlockSize>::MemoryPool(MemoryPool&& memoryPool)
 throw()
 {
-    MemoryPool();
+    currentBlock_ = memoryPool.currentBlock_;
+    memoryPool.currentBlock_ = nullptr;
+    currentSlot_ = memoryPool.currentSlot_;
+    lastSlot_ = memoryPool.lastSlot_;
+    freeSlots_ = memoryPool.freeSlots;
 }
-
 
 
 template <typename T, size_t BlockSize>
 template<class U>
 MemoryPool<T, BlockSize>::MemoryPool(const MemoryPool<U>& memoryPool)
+throw() :
+MemoryPool()
+{}
+
+
+
+template <typename T, size_t BlockSize>
+MemoryPool<T, BlockSize>&
+MemoryPool<T, BlockSize>::operator=(MemoryPool&& memoryPool)
 throw()
 {
-    MemoryPool();
+    if (this != &memoryPool)
+    {
+        std::swap(currentBlock_, memoryPool.currentBlock_);
+        currentSlot_ = memoryPool.currentSlot_;
+        lastSlot_ = memoryPool.lastSlot_;
+        freeSlots_ = memoryPool.freeSlots;
+    }
+    return *this;
 }
 
 
@@ -72,7 +99,7 @@ MemoryPool<T, BlockSize>::~MemoryPool()
 throw()
 {
     slot_pointer_ curr = currentBlock_;
-    while (curr != 0) {
+    while (curr != nullptr) {
         slot_pointer_ prev = curr->next;
         operator delete(reinterpret_cast<void*>(curr));
         curr = prev;
@@ -112,7 +139,7 @@ MemoryPool<T, BlockSize>::allocateBlock()
     currentBlock_ = reinterpret_cast<slot_pointer_>(newBlock);
     // Pad block body to staisfy the alignment requirements for elements
     data_pointer_ body = newBlock + sizeof(slot_pointer_);
-    size_type bodyPadding = padPointer(body, sizeof(slot_type_));
+    size_type bodyPadding = padPointer(body, __alignof(slot_type_));
     currentSlot_ = reinterpret_cast<slot_pointer_>(body + bodyPadding);
     lastSlot_ = reinterpret_cast<slot_pointer_>
         (newBlock + BlockSize - sizeof(slot_type_) + 1);
@@ -122,9 +149,9 @@ MemoryPool<T, BlockSize>::allocateBlock()
 
 template <typename T, size_t BlockSize>
 inline typename MemoryPool<T, BlockSize>::pointer
-MemoryPool<T, BlockSize>::allocate(size_type, const_pointer)
+MemoryPool<T, BlockSize>::allocate(size_type n, const_pointer hint)
 {
-    if (freeSlots_ != 0) {
+    if (freeSlots_ != nullptr) {
         pointer result = reinterpret_cast<pointer>(freeSlots_);
         freeSlots_ = freeSlots_->next;
         return result;
@@ -140,9 +167,9 @@ MemoryPool<T, BlockSize>::allocate(size_type, const_pointer)
 
 template <typename T, size_t BlockSize>
 inline void
-MemoryPool<T, BlockSize>::deallocate(pointer p, size_type)
+MemoryPool<T, BlockSize>::deallocate(pointer p, size_type n)
 {
-    if (p != 0) {
+    if (p != nullptr) {
         reinterpret_cast<slot_pointer_>(p)->next = freeSlots_;
         freeSlots_ = reinterpret_cast<slot_pointer_>(p);
     }
@@ -162,29 +189,32 @@ const throw()
 
 
 template <typename T, size_t BlockSize>
+template <class U, class... Args>
 inline void
-MemoryPool<T, BlockSize>::construct(pointer p, const_reference val)
+MemoryPool<T, BlockSize>::construct(U* p, Args&&... args)
 {
-    new (p)value_type(val);
+    new (p)U(std::forward<Args>(args)...);
 }
 
 
 
 template <typename T, size_t BlockSize>
+template <class U>
 inline void
-MemoryPool<T, BlockSize>::destroy(pointer p)
+MemoryPool<T, BlockSize>::destroy(U* p)
 {
-    p->~value_type();
+    p->~U();
 }
 
 
 
 template <typename T, size_t BlockSize>
+template <class... Args>
 inline typename MemoryPool<T, BlockSize>::pointer
-MemoryPool<T, BlockSize>::newElement(const_reference val)
+MemoryPool<T, BlockSize>::newElement(Args&&... args)
 {
     pointer result = allocate();
-    construct(result, val);
+    construct<value_type>(result, std::forward<Args>(args)...);
     return result;
 }
 
@@ -194,7 +224,7 @@ template <typename T, size_t BlockSize>
 inline void
 MemoryPool<T, BlockSize>::deleteElement(pointer p)
 {
-    if (p != 0) {
+    if (p != nullptr) {
         p->~value_type();
         deallocate(p);
     }
