@@ -17,7 +17,7 @@ using std::make_pair;
 MCTreeSearch::MCTreeSearch(int M, int N, rule_ptr rule)
     : M(M), N(N), rule(rule)
 {
-    
+
 }
 
 
@@ -29,7 +29,7 @@ MCTreeSearch::~MCTreeSearch()
 point MCTreeSearch::solve(const State& state)
 {
     root = TreeNode::create_node(0, 0, Global::ME);
-    int times = 100000;
+    int times = 10000;
 
     for (int k = 0; k < times; k++) {
         list<node_ptr> visited;
@@ -47,7 +47,7 @@ point MCTreeSearch::solve(const State& state)
         int value;
         node_ptr new_node;
         if (t->get_terminal()) {
-            value = 1;
+            value = candidate == Global::ME ? 0 : 1;
         }
         else {
             t->expand(rule, s);
