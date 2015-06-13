@@ -3,6 +3,7 @@
 #include <cmath>
 #include <list>
 #include <random>
+#include <chrono>
 
 #include <conio.h>
 #include <atlstr.h>
@@ -29,9 +30,20 @@ MCTreeSearch::~MCTreeSearch()
 point MCTreeSearch::solve(const State& state)
 {
     root = TreeNode::create_node(0, 0, Global::ME);
-    int times = 10000;
+    int times = 100000;
+
+    using namespace std::chrono;
+    steady_clock::time_point t1 = steady_clock::now();
+    typedef duration<int, std::milli> time_mili;
 
     for (int k = 0; k < times; k++) {
+        if (k % 10000 == 0) {
+            steady_clock::time_point t2 = steady_clock::now();
+            time_mili time_used = duration_cast<time_mili>(t2 - t1);
+            if (time_used.count() > 3000) {
+                break;
+            }
+        }
         list<node_ptr> visited;
         node_ptr t = root;
         state_ptr s = State::create_state(state);
@@ -45,8 +57,21 @@ point MCTreeSearch::solve(const State& state)
             candidate = candidate % 2 + 1;
         }
         int value;
+        auto move = t->get_move();
+        int x = move.first, y = move.second;
+        bool ternimate = false;
+        if (candidate == Global::ME) {
+            if (s->is_opponent_win(x, y)) {
+                ternimate = true;
+            }
+        }
+        else {
+            if (s->is_me_win(x, y)) {
+                ternimate = true;
+            }
+        }
         node_ptr new_node;
-        if (t->get_terminal()) {
+        if (ternimate) {
             value = candidate == Global::ME ? 0 : 1;
         }
         else {

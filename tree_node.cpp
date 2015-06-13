@@ -114,20 +114,8 @@ void TreeNode::expand(const rule_ptr& rule, const state_ptr& state)
 {
     auto move_list = rule->get_all_move(state);
     for (const auto& move : move_list) {
-        state_ptr new_state = State::create_state(*state);
         int x = move.first, y = move.second;
         auto new_node = create_node(x, y, candidate % 2 + 1);
-        new_state->move(x, y, candidate);
-        if (candidate == Global::ME) {
-            if (new_state->is_me_win(x, y)) {
-                new_node->is_terminal = true;
-            }
-        }
-        else {
-            if (new_state->is_opponent_win(x, y)) {
-                new_node->is_terminal = true;
-            }
-        }
         children.push_back(new_node);
     }
 }
