@@ -83,7 +83,7 @@ point MCTreeSearch::solve(const State& state)
             value = new_node->monte_carlo(rule, s);
         }
         for (const auto& node : visited) {
-            node->update(value);
+            node->update(1, value);
         }
     }
     node_ptr selected = root->choose_best();

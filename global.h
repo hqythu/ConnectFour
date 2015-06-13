@@ -26,8 +26,6 @@ public:
     static const int ME;
     static const int OPPONENT;
 
-    static std::default_random_engine generator;
-
     //static MemoryPool<State> state_pool;
     //static MemoryPool<TreeNode> node_pool;
 };

@@ -2,9 +2,6 @@
 #include <utility>
 #include <memory>
 
-#include <conio.h>
-#include <atlstr.h>
-
 #include "Point.h"
 #include "Strategy.h"
 
@@ -64,8 +61,6 @@ extern "C" __declspec(dllexport) Point* getPoint(const int M, const int N, const
 			break;
 		}
 	}*/
-
-    //AllocConsole();
 
     rule_ptr rule = rule_ptr(new Rule(noX, noY));
     MCTreeSearch treesearch(M, N, rule);

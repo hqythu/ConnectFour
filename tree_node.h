@@ -31,7 +31,7 @@ public:
     bool get_terminal() { return is_terminal; }
 
     bool is_leaf();
-    void update(int value);
+    void update(int visited, int value);
     node_ptr select();
     node_ptr choose_best();
     void expand(const rule_ptr& rule, const state_ptr& state);

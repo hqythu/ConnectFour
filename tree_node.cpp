@@ -1,11 +1,9 @@
 #include "tree_node.h"
 
 #include <cmath>
+#include <cstdlib>
 #include <random>
 #include <limits>
-
-#include <conio.h>
-#include <atlstr.h>
 
 MemoryPool<TreeNode> node_pool;
 
@@ -46,9 +44,9 @@ bool TreeNode::is_leaf()
 }
 
 
-void TreeNode::update(int value)
+void TreeNode::update(int visited, int value)
 {
-    n_visited++;
+    n_visited += visited;
     n_value += value;
 }
 
@@ -56,8 +54,7 @@ void TreeNode::update(int value)
 node_ptr TreeNode::select()
 {
     node_ptr selected;
-    //double max = std::numeric_limits<double>::min();
-    double max = -1;
+    double max = -std::numeric_limits<double>::max();
     //std::uniform_real_distribution<double> uniform(0, 1);
 
     auto calc = [this](const node_ptr& child) {
@@ -65,12 +62,14 @@ node_ptr TreeNode::select()
         double result;
         if (this->candidate == Global::ME) {
             result = static_cast<double>(child->n_value) / (child->n_visited + epsilon)
-                + sqrt(log(this->n_visited + 1) / (child->n_visited + epsilon));
+                + sqrt(log(this->n_visited + 1) / (child->n_visited + epsilon))
+                + rand() % 100 * epsilon / 100;
                 //+ uniform(Global::generator) * epsilon;
         }
         else {
             result = static_cast<double>(child->n_visited - child->n_value) / (child->n_visited + epsilon)
-                + sqrt(log(this->n_visited + 1) / (child->n_visited + epsilon));
+                + sqrt(log(this->n_visited + 1) / (child->n_visited + epsilon))
+                + rand() % 100 * epsilon / 100;
                 //+ uniform(Global::generator) * epsilon;
         }
         return result;
@@ -90,8 +89,7 @@ node_ptr TreeNode::select()
 node_ptr TreeNode::choose_best()
 {
     node_ptr selected;
-    //double max = std::numeric_limits<double>::min();
-    double max = -1;
+    double max = -std::numeric_limits<double>::max();
     std::uniform_real_distribution<double> uniform(0, 1);
 
     auto calc = [this, &uniform](const node_ptr& child) {
