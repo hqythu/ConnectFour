@@ -14,7 +14,7 @@ public:
     Rule(int noX, int noY);
     ~Rule();
 
-    typedef std::list<point> point_list;
+    typedef std::list<point, SingletonPool<point>> point_list;
 
     point_list get_all_move(const state_ptr& state) const;
     point get_random_move(const state_ptr& state) const;

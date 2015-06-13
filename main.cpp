@@ -7,7 +7,8 @@ int main()
 {
     int M = 10, N = 10;
     int noX = 5, noY = 5;
-    MCTreeSearch treesearch(M, N, noX, noY);
+    rule_ptr rule(new Rule(noX, noY));
+    MCTreeSearch treesearch(M, N, rule);
     int** board = new int*[M];
     for (int i = 0; i < M; i++){
         board[i] = new int[N];
@@ -19,6 +20,7 @@ int main()
     for (int i = 0; i < N; i++) {
         top[i] = M;
     }
-    treesearch.solve(board, top);
+    State state(M, N, board, top);
+    treesearch.solve(state);
     return 0;
 }

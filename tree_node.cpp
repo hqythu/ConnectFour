@@ -58,20 +58,20 @@ node_ptr TreeNode::select()
     node_ptr selected;
     //double max = std::numeric_limits<double>::min();
     double max = -1;
-    std::uniform_real_distribution<double> uniform(0, 1);
+    //std::uniform_real_distribution<double> uniform(0, 1);
 
-    auto calc = [this, &uniform](const node_ptr& child) {
+    auto calc = [this](const node_ptr& child) {
         double epsilon = 1e-3;
         double result;
         if (this->candidate == Global::ME) {
             result = static_cast<double>(child->n_value) / (child->n_visited + epsilon)
-                + sqrt(log(this->n_visited + 1) / (child->n_visited + epsilon))
-                + uniform(Global::generator) * epsilon;
+                + sqrt(log(this->n_visited + 1) / (child->n_visited + epsilon));
+                //+ uniform(Global::generator) * epsilon;
         }
         else {
             result = static_cast<double>(child->n_visited - child->n_value) / (child->n_visited + epsilon)
-                + sqrt(log(this->n_visited + 1) / (child->n_visited + epsilon))
-                + uniform(Global::generator) * epsilon;
+                + sqrt(log(this->n_visited + 1) / (child->n_visited + epsilon));
+                //+ uniform(Global::generator) * epsilon;
         }
         return result;
     };

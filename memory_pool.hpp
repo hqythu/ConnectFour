@@ -182,7 +182,7 @@ inline typename MemoryPool<T, BlockSize>::size_type
 MemoryPool<T, BlockSize>::max_size()
 const throw()
 {
-    size_type maxBlocks = -1 / BlockSize;
+    size_type maxBlocks = size_type(-1) / BlockSize;
     return (BlockSize - sizeof(data_pointer_)) / sizeof(slot_type_) * maxBlocks;
 }
 

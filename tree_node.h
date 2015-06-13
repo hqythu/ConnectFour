@@ -12,7 +12,7 @@
 class TreeNode
 {
 private:
-    std::list<node_ptr> children;
+    std::list<node_ptr, SingletonPool<node_ptr>> children;
     int n_visited;
     int n_value;
     int candidate;

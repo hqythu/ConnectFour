@@ -30,7 +30,7 @@ MCTreeSearch::~MCTreeSearch()
 point MCTreeSearch::solve(const State& state)
 {
     root = TreeNode::create_node(0, 0, Global::ME);
-    int times = 100000;
+    int times = 200000;
 
     using namespace std::chrono;
     steady_clock::time_point t1 = steady_clock::now();
@@ -44,7 +44,7 @@ point MCTreeSearch::solve(const State& state)
                 break;
             }
         }
-        list<node_ptr> visited;
+        list<node_ptr, SingletonPool<node_ptr>> visited;
         node_ptr t = root;
         state_ptr s = State::create_state(state);
         int candidate = Global::ME;

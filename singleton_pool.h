@@ -23,6 +23,9 @@ public:
     };
 
     SingletonPool() throw() {}
+    SingletonPool(const SingletonPool& memoryPool) throw() {}
+    SingletonPool(SingletonPool&& memoryPool) throw() {}
+    template <class U> SingletonPool(const SingletonPool<U>& memoryPool) throw() {}
 
     ~SingletonPool() throw() {}
 
