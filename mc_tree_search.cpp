@@ -30,7 +30,7 @@ MCTreeSearch::~MCTreeSearch()
 point MCTreeSearch::solve(const State& state)
 {
     root = TreeNode::create_node(0, 0, Global::ME);
-    int times = 200000;
+    const int times = 100000;
 
     using namespace std::chrono;
     steady_clock::time_point t1 = steady_clock::now();
@@ -63,11 +63,21 @@ point MCTreeSearch::solve(const State& state)
         if (candidate == Global::ME) {
             if (s->is_opponent_win(x, y)) {
                 ternimate = true;
+                value = 0;
+            }
+            else if (s->is_tie()) {
+                ternimate = true;
+                value = 0;
             }
         }
         else {
             if (s->is_me_win(x, y)) {
                 ternimate = true;
+                value = 1;
+            }
+            else if (s->is_tie()) {
+                ternimate = true;
+                value = 0;
             }
         }
         node_ptr new_node;
