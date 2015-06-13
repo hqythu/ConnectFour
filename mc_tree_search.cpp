@@ -81,10 +81,7 @@ point MCTreeSearch::solve(const State& state)
             }
         }
         node_ptr new_node;
-        if (ternimate) {
-            value = candidate == Global::ME ? 0 : 1;
-        }
-        else {
+        if (!ternimate) {
             t->expand(rule, s);
             new_node = t->select();
             visited.push_back(new_node);
