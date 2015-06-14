@@ -70,7 +70,7 @@ extern "C" __declspec(dllexport) Point* getPoint(const int M, const int N, const
     rule_ptr rule = rule_ptr(new Rule(noX, noY));
     MCTreeSearch treesearch(M, N, rule);
     State state(M, N, board, top);
-    auto result = treesearch.solve(state);
+    auto result = treesearch.solve(state, lastX, lastY);
     x = result.first;
     y = result.second;
 	

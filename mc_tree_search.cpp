@@ -24,10 +24,11 @@ MCTreeSearch::~MCTreeSearch()
 }
 
 
-point MCTreeSearch::solve(const State& state)
+point MCTreeSearch::solve(const State& state, int last_x, int last_y)
 {
-    root = TreeNode::create_node(0, 0, Global::ME);
+    root = TreeNode::create_node(last_x, last_y, Global::ME);
     const int times = 100000;
+    const int monte_carlo_time = 5;
 
     using namespace std::chrono;
     steady_clock::time_point t1 = steady_clock::now();

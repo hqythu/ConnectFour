@@ -17,7 +17,7 @@ public:
     MCTreeSearch(int M, int N, rule_ptr rule);
     ~MCTreeSearch();
 
-    point solve(const State& state);
+    point solve(const State& state, int last_x, int last_y);
     int monte_carlo(const state_ptr& state);
 };
 
