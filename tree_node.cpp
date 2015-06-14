@@ -119,23 +119,25 @@ int TreeNode::monte_carlo(const rule_ptr& rule, const state_ptr& state)
     state_ptr new_state = State::create_state(*state);
     int candidate = this->candidate;
     int k = 0;
+    int x = this->x, y = this->y;
     while (true) {
         if (candidate == Global::ME) {
-            if (new_state->is_opponent_win(x, y)) {
+            if (rule->is_opponent_win(new_state, x, y)) {
                 return 0;
             }
         }
         else {
-            if (new_state->is_me_win(x, y)) {
+            if (rule->is_me_win(new_state, x, y)) {
                 return 1;
             }
         }
-        if (new_state->is_tie()) {
+        if (rule->is_tie(new_state)) {
             return 0;
         }
         auto move = rule->get_random_move(new_state);
-        int x = move.first, y = move.second;
+        x = move.first, y = move.second;
         new_state->move(x, y, candidate);
         candidate = candidate % 2 + 1;
+        k++;
     }
 }

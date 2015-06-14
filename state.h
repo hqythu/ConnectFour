@@ -24,10 +24,6 @@ public:
 
     void move(int x, int y, int candidate);
 
-    bool is_me_win(int x, int y) const;
-    bool is_opponent_win(int x, int y) const;
-    bool is_tie() const;
-
 private:
     int board[BOARD_MAX][BOARD_MAX];
     int top[BOARD_MAX];

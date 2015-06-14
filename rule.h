@@ -19,6 +19,10 @@ public:
     point_list get_all_move(const state_ptr& state) const;
     point get_random_move(const state_ptr& state) const;
 
+    bool is_me_win(const state_ptr& state, int x, int y) const;
+    bool is_opponent_win(const state_ptr& state, int x, int y) const;
+    bool is_tie(const state_ptr& state) const;
+
 private:
     int no_x, no_y;
 };

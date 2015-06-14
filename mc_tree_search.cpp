@@ -5,9 +5,6 @@
 #include <random>
 #include <chrono>
 
-#include <conio.h>
-#include <atlstr.h>
-
 using std::list;
 using std::shared_ptr;
 using std::unique_ptr;
@@ -37,8 +34,7 @@ point MCTreeSearch::solve(const State& state)
     typedef duration<int, std::milli> time_mili;
 
     for (int k = 0; k < times; k++) {
-        if (k % 1000 == 0) {
-            _cprintf("%d\n", k);
+        if (k % 10000 == 0) {
             steady_clock::time_point t2 = steady_clock::now();
             time_mili time_used = duration_cast<time_mili>(t2 - t1);
             if (time_used.count() > 3000) {
@@ -62,18 +58,18 @@ point MCTreeSearch::solve(const State& state)
         int x = move.first, y = move.second;
         bool ternimate = false;
         if (candidate == Global::ME) {
-            if (s->is_opponent_win(x, y)) {
+            if (rule->is_opponent_win(s, x, y)) {
                 ternimate = true;
                 value = 0;
             }
         }
         else {
-            if (s->is_me_win(x, y)) {
+            if (rule->is_me_win(s, x, y)) {
                 ternimate = true;
                 value = 1;
             }
         }
-        if (s->is_tie()) {
+        if (rule->is_tie(s)) {
             ternimate = true;
             value = 0;
         }
