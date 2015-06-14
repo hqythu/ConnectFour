@@ -81,10 +81,13 @@ point MCTreeSearch::solve(const State& state, int last_x, int last_y)
             visited.push_back(new_node);
             auto move = new_node->get_move();
             s->move(move.first, move.second, candidate);
-            value = new_node->monte_carlo(rule, s);
+            value = 0;
+            for (int i = 0; i < monte_carlo_time; i++) {
+                value += new_node->monte_carlo(rule, s);
+            }
         }
         for (const auto& node : visited) {
-            node->update(1, value);
+            node->update(monte_carlo_time, value);
         }
     }
     node_ptr selected = root->choose_best();
