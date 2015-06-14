@@ -3,6 +3,8 @@
 
 #include "global.h"
 #include "tree_node.h"
+#include "state.h"
+#include "rule.h"
 
 
 class MCTreeSearch

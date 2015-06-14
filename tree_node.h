@@ -1,12 +1,13 @@
 #ifndef TREENODE_H_
+#define TREENODE_H_
 
 #include <list>
 #include <memory>
 #include <utility>
 
-#include "global.h"
-#include "state.h"
+#include "definition.h"
 #include "rule.h"
+#include "singleton_pool.h"
 
 
 class TreeNode

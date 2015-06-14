@@ -4,8 +4,9 @@
 #include <list>
 #include <utility>
 
-#include "global.h"
+#include "definition.h"
 #include "state.h"
+#include "singleton_pool.h"
 
 
 class Rule

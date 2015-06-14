@@ -1,7 +1,7 @@
 #ifndef STATE_H_
 #define STATE_H_
 
-#include "global.h"
+#include "definition.h"
 
 const int BOARD_MAX = 12;
 

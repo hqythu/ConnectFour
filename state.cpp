@@ -1,6 +1,6 @@
 #include "state.h"
 
-MemoryPool<State> state_pool;
+#include "global.h"
 
 
 State::State(int M, int N, int** board_, const int* top_)
@@ -24,8 +24,8 @@ State::~State()
 
 state_ptr State::create_state(const State& state)
 {
-    return state_ptr(state_pool.newElement(state), [](State* p){
-        state_pool.deleteElement(p);
+    return state_ptr(Global::state_pool.newElement(state), [](State* p){
+        Global::state_pool.deleteElement(p);
     });
 }
 
