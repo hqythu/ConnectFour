@@ -67,7 +67,7 @@ point MCTreeSearch::solve(const State& state, int last_x, int last_y)
         else {
             if (rule->is_me_win(s, x, y)) {
                 ternimate = true;
-                value = 1;
+                value = monte_carlo_time;
             }
         }
         if (rule->is_tie(s)) {
