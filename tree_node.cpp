@@ -20,7 +20,6 @@ TreeNode::TreeNode(int x, int y, int candidate)
     this->candidate = candidate;
     n_value = 0;
     n_visited = 0;
-    is_terminal = false;
 }
 
 
@@ -34,7 +33,6 @@ node_ptr TreeNode::create_node(int x, int y, int candidate)
     return node_ptr(node_pool.newElement(x, y, candidate), [](TreeNode* p) {
         node_pool.deleteElement(p);
     });
-    //return node_ptr(new TreeNode(x, y, candidate));
 }
 
 
@@ -55,7 +53,6 @@ node_ptr TreeNode::select()
 {
     node_ptr selected;
     double max = -std::numeric_limits<double>::max();
-    //std::uniform_real_distribution<double> uniform(0, 1);
 
     auto calc = [this](const node_ptr& child) {
         double epsilon = 1e-3;
@@ -64,13 +61,11 @@ node_ptr TreeNode::select()
             result = static_cast<double>(child->n_value) / (child->n_visited + epsilon)
                 + sqrt(log(this->n_visited + 1) / (child->n_visited + epsilon))
                 + rand() % 100 * epsilon / 100;
-                //+ uniform(Global::generator) * epsilon;
         }
         else {
             result = static_cast<double>(child->n_visited - child->n_value) / (child->n_visited + epsilon)
                 + sqrt(log(this->n_visited + 1) / (child->n_visited + epsilon))
                 + rand() % 100 * epsilon / 100;
-                //+ uniform(Global::generator) * epsilon;
         }
         return result;
     };
@@ -125,23 +120,22 @@ int TreeNode::monte_carlo(const rule_ptr& rule, const state_ptr& state)
     int candidate = this->candidate;
     int k = 0;
     while (true) {
-        k++;
-        auto move = rule->get_random_move(new_state);
-        int x = move.first, y = move.second;
-        new_state->move(x, y, candidate);
         if (candidate == Global::ME) {
-            if (new_state->is_me_win(x, y)) {
-                return 1;
+            if (new_state->is_opponent_win(x, y)) {
+                return 0;
             }
         }
         else {
-            if (new_state->is_opponent_win(x, y)) {
-                return 0;
+            if (new_state->is_me_win(x, y)) {
+                return 1;
             }
         }
         if (new_state->is_tie()) {
             return 0;
         }
+        auto move = rule->get_random_move(new_state);
+        int x = move.first, y = move.second;
+        new_state->move(x, y, candidate);
         candidate = candidate % 2 + 1;
     }
 }

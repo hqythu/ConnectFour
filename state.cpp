@@ -27,7 +27,6 @@ state_ptr State::create_state(const State& state)
     return state_ptr(state_pool.newElement(state), [](State* p){
         state_pool.deleteElement(p);
     });
-    //return state_ptr(new State(state));
 }
 
 

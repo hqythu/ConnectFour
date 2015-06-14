@@ -37,7 +37,8 @@ point MCTreeSearch::solve(const State& state)
     typedef duration<int, std::milli> time_mili;
 
     for (int k = 0; k < times; k++) {
-        if (k % 10000 == 0) {
+        if (k % 1000 == 0) {
+            _cprintf("%d\n", k);
             steady_clock::time_point t2 = steady_clock::now();
             time_mili time_used = duration_cast<time_mili>(t2 - t1);
             if (time_used.count() > 3000) {
@@ -65,20 +66,16 @@ point MCTreeSearch::solve(const State& state)
                 ternimate = true;
                 value = 0;
             }
-            else if (s->is_tie()) {
-                ternimate = true;
-                value = 0;
-            }
         }
         else {
             if (s->is_me_win(x, y)) {
                 ternimate = true;
                 value = 1;
             }
-            else if (s->is_tie()) {
-                ternimate = true;
-                value = 0;
-            }
+        }
+        if (s->is_tie()) {
+            ternimate = true;
+            value = 0;
         }
         node_ptr new_node;
         if (!ternimate) {
