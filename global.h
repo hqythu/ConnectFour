@@ -14,7 +14,7 @@ public:
     static const int ME;
     static const int OPPONENT;
 
-    static MemoryPool<State, sizeof(State) * 1024> state_pool;
+    static MemoryPool<State, sizeof(State) * 16> state_pool;
     static MemoryPool<TreeNode, sizeof(TreeNode) * 1024> node_pool;
 };
 
